@@ -1,0 +1,75 @@
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/deepstream.io-client-js/2.1.1/deepstream.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>  
+<script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+</head>
+<body>
+<a-scene id="scene">
+  <!--assets at one place for better loading-->
+  <a-assets> 
+    <img id="pink" src="https://img.gs/bbdkhfbzkk/stretch/http://i.imgur.com/1hyyIUi.jpg" crossorigin="anonymous" />
+    <img src="https://img.gs/bbdkhfbzkk/stretch/https://i.imgur.com/25P1geh.png" id="grid" crossorigin="anonymous">
+    <img src="https://img.gs/bbdkhfbzkk/2048x1024,stretch/http://i.imgur.com/WMNH2OF.jpg" id="chrome" crossorigin="anonymous">
+    <img id="sky" src="https://img.gs/bbdkhfbzkk/2048x2048,stretch/http://i.imgur.com/WqlqEkq.jpg" crossorigin="anonymous" />
+    <a-asset-item id="dawningFont" src="https://cdn.glitch.com/c719c986-c0c5-48b8-967c-3cd8b8aa17f3%2FdawningOfANewDayRegular.typeface.json?1490305922844"></a-asset-item>
+    <a-asset-item id="exoFont" src="https://cdn.glitch.com/c719c986-c0c5-48b8-967c-3cd8b8aa17f3%2Fexo2Black.typeface.json?1490305922150"></a-asset-item>
+    <a-asset-item id="exoItalicFont" src="https://cdn.glitch.com/c719c986-c0c5-48b8-967c-3cd8b8aa17f3%2Fexo2BlackItalic.typeface.json?1490305922725"></a-asset-item>
+    <a-mixin id="eye" geometry="primitive: sphere; radius: 0.2" material="shader: flat; side: double; color: #FFF"></a-mixin>
+    <a-mixin id="pupil" geometry="primitive: sphere; radius: 0.05" material="shader: flat; side: double; color: #222"></a-mixin>
+    <a-mixin id="arm" geometry="primitive: box; depth: 0.2; height: 1.5; width: 0.2" material="color: #222; shader: flat"></a-mixin>
+  </a-assets>
+
+  <!--custom entities-->
+  <a-entity scale="2 2 2" geometry="primitive: torusKnot" position="0 6 -10" material="color: magenta; metalness:1; roughness: 0.1; sphericalEnvMap: #sky;">
+        <a-animation easing="linear" attribute="rotation" dur="10000" to="0 0 360" repeat="indefinite"></a-animation>
+  </a-entity>
+
+  <a-entity position="-3 1 -6" rotation="5 0 0">
+    <a-entity
+          rotation="0 0 5"
+          position="0 2 0.2"
+          text-geometry="value: Frontend-Connect; font: #dawningFont; bevelEnabled: true; bevelSize: 0.05; bevelThickness: 0.05; curveSegments: 12; size: 1; height: 0;"
+          material="color:lavenderblush; metalness:1; roughness: 0; sphericalEnvMap: #pink;">
+    </a-entity>
+
+    <a-entity position="-0.5 0.5 -0.5" scale="0.6 1.2 1" text-geometry="value: VR on the web; font: #exoFont; bevelEnabled: true; bevelSize: 0.1; bevelThickness: 0.1; curveSegments: 1; size: 1.5; height: 0.5;" material="color:pink; metalness:0.9; roughness: 0.05; sphericalEnvMap: #chrome;"></a-entity>
+
+    <a-entity position="1 0 0.3" text-geometry="value: 2017; font: #exoItalicFont; style: italic; size: 0.8; weight: bold; height: 0;"
+                  material="shader: flat; color: white">
+    </a-entity>
+    <a-entity position="1 0 0.3" text-geometry="value: 2017; font: #exoItalicFont; style: italic; size: 0.8; weight: bold; height: 0; bevelEnabled: true; bevelSize: 0.04; bevelThickness: 0.04; curveSegments: 1"
+                  material="shader: flat; color: white; transparent: true; opacity: 0.4">
+    </a-entity>
+  </a-entity>
+
+  <a-entity
+        geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0"
+        material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;">
+  </a-entity>
+
+  <a-entity light="color: #ccccff; intensity: 1; type: ambient;" visible=""></a-entity>
+  <a-entity light="color: ffaaff; intensity: 1.5" position="5 5 5"></a-entity>
+  <a-entity light="color: white; intensity: 0.5" position="-5 5 15"></a-entity>
+  <a-entity light="color: white; type: ambient;"></a-entity>
+
+  <a-sky src="#sky" rotation="0 -90 0"></a-sky>
+  <a-entity position="0 -5 0"
+        geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0"
+        material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;">
+  </a-entity>
+  <!--camera entity-->
+  <a-entity>
+    <a-entity camera look-controls wasd-controls id="user-cam">
+      <a-entity position="0 0 -3" scale="0.2 0.2 0.2" geometry="primitive: ring; radiusOuter: 0.20; radiusInner: 0.13;" material="color: #ADD8E6; shader: flat" cursor="maxDistance: 30; fuse: true">
+        <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+        <a-animation begin="fusing" easing="ease-in" attribute="scale" fill="forwards" from="1 1 1" to="0.2 0.2 0.2" dur="1500"></a-animation>
+      </a-entity>
+    </a-entity>
+  </a-entity>
+
+</a-scene>
+</body>
+</html>

@@ -404,6 +404,6 @@ We start by removing the complete avatar from the scene. We also make sure to de
 
 #### That's it!
 
-We have now successfully implemented a simple VR app in realtime. Go ahead and test it out. If you have been working in a local envrironment, you might need a local server to host your files. As mentioned above, I personally use [glitch](glitch.com) for all my VR projects. It automatically hosts all the projects and gives a URL which can be instantly used on multiple devices for the applications like we just built.
+We have now successfully implemented a simple VR app in realtime. Go ahead and test it out with your friends and let them witness the magic! If you have been working in a local envrironment, you might need a local server to host your files. As mentioned above, I personally use [glitch](glitch.com) for all my VR projects. It automatically hosts all the projects and gives a URL which can be instantly used on multiple devices for the applications like we just built.
 
 You now know the basics of both A-Frame and deepstream allowing you to build both VR apps and realtime apps or both together like we just did. Ideas are already brewing in your mind? Go ahead and build that app you've always wanted to! Here's the complete [source code](https://github.com/Srushtika/realtime-multiplayer-webvr-aframe) for this application. Feel free to shout to me on [Twitter](https://twitter.com/Srushtika) if you get stuck or would like to know more about something.

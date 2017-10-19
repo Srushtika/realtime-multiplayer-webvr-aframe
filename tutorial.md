@@ -28,11 +28,13 @@ Further, we'll use [deepstream.io](https://deepstreamhub.com/) to implement all 
 
 ![deepstream logo](https://raw.githubusercontent.com/pluralsight/guides/master/images/b72cd656-c2f8-488b-b8c6-4916e69a3f91.png)
 
+As you know by now that every WebVR application can be accessed from just a browser. This means, we'll need to host our files in order to be able to access them in a mobile with a URL. [Glitch](https://glitch.com/) is a very convenient way of doing this. You can simply create a new project and when you are done, the URL is readily available so that you can use it via mobile browsers instantly.
+
 #### Getting started
 
-So, let's start by building the basic VR setup for the application. We'll do this in a HTML file and make use of A-Frame's entity-component system. 
+Let us start by building the basic VR setup for the application. We'll use A-Frame's [entity-component system](https://aframe.io/docs/0.7.0/introduction/entity-component-system.html) (ECS). ECS makes it easy to build any objects in the scene by treating every object as an entity which differs from other entities by the various components (or attributes) that can attached to an entity.
 
-In your HTML file, add the following: 
+In your HTML file, start of by adding the HTML skeleton code: 
 
 ```html
 <html>
@@ -52,19 +54,16 @@ In your HTML file, add the following:
 </body>
 </html>
 ```
-
-Let's understand the above snippet.
-
-The references refer to the following:
+The references refer to the following respectively:
 
 1. deepstream's Javascript client
-2. A-Frame source file
+2. A-Frame's source file
 3. Our local JS file which we'll use next to add the logic into the app
 4. A-frame's community contributed - text component to conveniently add text to our VR scene.
 
-All the objects we wish to include in our VR scene must go within the `a-scene` tag in our HTML file, as scene above (pun intended)!
+All the objects we wish to include in our VR scene must go within the `a-scene` tag in our HTML file, as scene above (pun intended)! This is analogous to the `body` tag in regular HTML documents.
 
-Next, let's add all the assets we'll use within the `a-assets` tag. Adding all the resources under this tag makes sure that all your assets are pre-loaded before your app shows up, thus preventing a shitty first look due to slow loading of resources.
+Next, we will add all the assets we wish to use within the `a-assets` tag. Adding all the resources under this tag makes sure that all your assets are pre-loaded before your app shows up, thus preventing a shitty first look due to slow loading of resources.
 
 ```html
   <!--assets at one place for better loading-->
@@ -83,15 +82,15 @@ Next, let's add all the assets we'll use within the `a-assets` tag. Adding all t
     <a-mixin id="arm" geometry="primitive: box; depth: 0.2; height: 1.5; width: 0.2" material="color: #222; shader: flat"></a-mixin>
   </a-assets>
 ```
-Feel free to use your own resources to give the app a customized feel.
+Feel free to use your own resources to give the app a customized feel!
 
-There are two new things in the above code snippet, let's crack them down:
+You will observe that we added two new tags in the above code snippet, let's crack them down:
 
 `a-asset-item` - invokes the three.js file loader. You can use this to load all file types.
 
-`a-mixin` - is a very useful tag which allows code reuse by allowing you to specify a set of properties to be applied to a single entity. You can give it an id and reference it multiple times as we'll see. We will have three mixins, each specifying certain attributes of the avatar that we intend to create- the eye, pupil and arms.
+`a-mixin` - is a very useful tag that allows code reuse by letting you specify a set of properties(components) to be applied to a single entity. You can give it an id and reference it multiple times as we'll see. We will have three mixins, each specifying certain attributes of the avatar that we intend to create- the eyes, pupils and arms.
 
-Now, let's add all the static visual elements in our VR scene.
+Now, let us add all the static visual elements in our VR scene.
 
 ```html
   <!--adds the torusKont-->
@@ -140,12 +139,13 @@ Now, let's add all the static visual elements in our VR scene.
         material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;">
   </a-entity>
 ```
+As you can see, we have implemented the complete app using ECS. However, this is not the only way that you can add objects to the scene. A-Frame comes with a few custom entities such as box, sphere etc. These custom entities are called [primitives](https://aframe.io/docs/0.7.0/introduction/html-and-primitives.html#primitives).
 
-I've added easy to follow comments within the code that explain what each of the entity-component set implements in our app. For the VR newbies, a sky is like a layer that covers your 360 deg sphere inside which you assume yourself to be standing while you are experiencing a VR app. It's generally like the sky in real-life which can be seen on the top as well appears to fold down near the horizon. We use `a-sky` in A-Frame to add a sky and the resource to be used can be either a 360 deg image or just a solid colour.
+As you can see, the code contains very easy to follow comments that explain what each of the entity-component set is trying to implement in our app. For VR newbies, here's something interesting- a sky is like a layer that covers your 360 deg sphere inside which you assume yourself to be standing while experiencing a VR app. It is generally analogous to the sky in real-life which can be seen on the top and appears to drop down near the horizon. We use `a-sky` in A-Frame to add a sky and the resource to be used can be either a 360 deg image or just a solid colour.
 
-Now comes the interesting part. We add a camera entity. This is a special entity offered by A-Frame that intrinsically grabs the continously changing position as well as rotation of your mobile phone while you are using an A-Frame powered VR app in the browser. It takes advantage of the various gyro sensors in your phone to achieve this under-the-hood.
+Now comes the interesting part. We require a camera entity. This is a special entity offered by A-Frame that intrinsically grabs the continously changing position as well as rotation values of your mobile phone while you are using an A-Frame powered VR app in the browser. It takes advantage of the various gyro sensors in your phone to achieve this under-the-hood.
 
-Let's add the camera-entity as shown below. We can optionally give it a shape and animation, which helps us to track the movement by serving as a cursor.
+Here's how we can add a camera entity. We can optionally give it a shape and animation, which helps us track it's movement by serving as a cursor.
 
 ```html
  <!--camera entity-->
@@ -159,17 +159,17 @@ Let's add the camera-entity as shown below. We can optionally give it a shape an
   </a-entity>
 ```
 
-By the end of this section, your VR app should ideally look like this: (Of course, if you haven't switched the resources with your custom ones!)
+By the end of this section, your VR app should ideally look like as shown below. But only if you haven't switched the resources with your custom ones, of course!
 
 ![first look](https://raw.githubusercontent.com/pluralsight/guides/master/images/83779eef-aa4b-4cd3-968e-1417afc4fd0b.51)
 
-We just finished setting up the basic scene, let's now add some funtionality to it that will make the avatars appear and disappear as the users log in and out of your application.
+Voila! we just finished setting up the basic VR scene, It's now time to add some funtionality to it in order to make the avatars appear, dissappear and move around in realtime as the users log in and out of your application or simply move their phone around.
 
-#### Now let's make it realtime
+#### Adding realtime functionality
 
-So, let's now add the logic within the main.js file that we linked above. As I mentioned earlier, we'll add realtime functionality using deepstream's open realtime server.
+It's time to spin up some magic into our VR scene. Using deepstream is very easy compared to any of the other existing alternatives like Firebase.
 
-Start by connecting to deepstream:
+Start by connecting your client/user to deepstream:
 
 ```javascript
 var client = deepstream('<YOUR APP URL>')
@@ -182,9 +182,9 @@ client.login({}, function (success,data) {
 })
 ```
 
-We can connect to deepstream's JS client as shown above. Navigate to deepstream's [dashboard](dashboard.deepstreamhub.com) and create an account for free. Next, add a new application and give it a name. On the home page of this application, you'll find something called the APP URL. Add this URL in the above code.
+We can connect to deepstream's JS client as shown above. For this tutorial, I have used deepstream's hosted version called deepstreamHub. For this, navigate to deepstream's [dashboard](dashboard.deepstreamhub.com) and create an account for free. Next, add a new application and give it a name. On the home page of this application, you'll find something called the APP URL. Add this URL in the above code.
 
-deepstream comes with a lot of [authentication mechanisms](https://deepstreamhub.com/tutorials/guides/security-overview/#authentication). For our application, we'll use the NO AUTH mechanism because for now, we shall not worry about the security and profile management etc. This is the reason why the first parameter of the login method is left empty. You can also skip this paramater completely. The callback has two paramers- `success` is a boolean variable, which if true implies that the login was successful, `data` which contains some user specific data such as a unique id. This data is different for different users. We'll use this unique ID in order to differentiate between the avatars of different users that should appear in the app.
+deepstream comes with a many [authentication mechanisms](https://deepstreamhub.com/tutorials/guides/security-overview/#authentication). For our application, we will simply use the NO AUTH mechanism for the sake of simplicity of this tutorial. This is the reason why the first parameter of the login method is left empty. You can also choose to skip this paramater completely. Login method's callback has two parameters- `success` is a boolean variable, which if true implies that the login was successful and `data` contains some user specific data such as a unique ID. This data is different for different users. We'll use this unique ID in order to differentiate between multiple avatars generated by different users that would appear in the scene.
 
 ```javascript
 //startup by creating a new record for each user
@@ -239,13 +239,13 @@ function startApp(data){
   });  
 }
 ```
-[Records](https://deepstreamhub.com/docs/client-js/datasync-record/) are documents in deepstream's realtime data-store. We make use of this feature to store the attributes (like id, position, rotation, etc) of all the users, which will be later implied on their respective avatars.
+For simplicity, we'll restrict the avatar's rotation/movement to x-axis only, while keeping the coordinates on the other two planes as zero. The initial position on x-axis is chosen randomly so that multiple avatars do not clutter at the same point in the scene as soon as they appear.
 
-For simplicity, we'll restrict the avatar's rotation/movement to x-axis, while keeping the coordinates on the other two planes zero. The initial position on x-axis is chosen randomly so that multiple avatars do not clutter at the same point in the scene.
+`a-box` is a [primitive](https://aframe.io/docs/0.7.0/introduction/html-and-primitives.html#primitives) in A-Frame that can be conveniently used to create a 3D box with basic attributes such as dimensions, position, rotation, color etc. We shall store these attributes using a record in deepstream and we'll add all the other parts of the avatar, i.e eyes and arms, with respect to this box's position (which serves as the head of the avatar).
 
-`a-box` is a [primitive](https://aframe.io/docs/0.7.0/introduction/html-and-primitives.html#primitives) in A-Frame that can be conveniently used to create a 3D box with basic attributes such as dimensions, position, rotation, color etc. We'll store these attributes using a record in deepstream and we'll add all the other parts of the avatar, i.e eyes and arms, with respect to this box's position, which will serve as a head of the avatar.
+[Records](https://deepstreamhub.com/docs/client-js/datasync-record/) are documents in deepstream's realtime data-store. We make use of this feature to store the attributes like id, position, rotation, etc of all the users, which will be later implied on their respective avatars.
 
-We retrieve an existing record or create a new one using `client.record.getRecord(<record name>);` We will ensure that it's a unique record for every user by adding the client's id to the name(path) of the record thus make it unique as well. Further, we add all the required attribures in this record, including the initial position which is selected at random. Next, we track the movement of the phone by using the camera entity that I explained earlier. We update this position every 100 milliseconds as seen above and consequently set this new data in the record each time.
+We retrieve an existing record or create a new one using `client.record.getRecord(<record name>);` We will ensure that it's a unique record for every user by adding the client's id to the name(path) of the record. Further, we need to add all the required attribures in this record, including the initial position which is selected at random. As discussed above, we track the movement of the phone by using the camera entity and we update this data every 100 milliseconds as seen above and consequently set this new data in the record each time.
 
 [Presence](https://deepstreamhub.com/tutorials/guides/presence/) is a common term in the realtime world which basically gives you the information about the user's online status. In our case, we would create and make the avatar appear in the scene only when a user comes online(hits the URL) and likewise make it disappear as soon as a user quits the app, in other words, closes the browser window on his/her phone. Additionally, deepstream allows you to subscribe to presence, which fires a callback every time a new user logs in or an existing user logs out. This is exactly what we require in our app.
 
@@ -277,7 +277,7 @@ function subscribeToAvatarChanges(id){
 }
 ```
 
-We create a new avatar by setting the right attributes for the right part of the avatar, this function is very straight forward:
+We create a new avatar by setting the right attributes (mainly the position and rotation) for the right parts of the avatar. I believe the following function is very straight forward:
 
 ```javascript
 //add Avatar when user enters the app
@@ -370,9 +370,11 @@ function createAvatar (id, rec) {
 } 
 ```
 
-The relative positions of eyes and arms with respect to the box are applied manually. This becomes easier with the use of the [visual inspector](https://aframe.io/docs/0.7.0/introduction/visual-inspector-and-dev-tools.html) tool that comes with A-Frame.
+The relative positions of eyes and arms with respect to the box are applied manually. This becomes easier with the use of a [visual inspector](https://aframe.io/docs/0.7.0/introduction/visual-inspector-and-dev-tools.html) tool that comes with A-Frame.
 
 We wrap all parts of the avatar into a root element so that it becomes easier to apply attribute changes to the whole avatar and avoid a zombie-like situation where one of the parts is disoriented relative to others. This also makes it easy to delete the whole avatar when a user logs out.
+
+If an avatar already exists, we simply update it's position and rotation from the continually updating data in the attr object in the user record. If you scroll back up to the `subscribeToAvatarChanges()` function, you will observe that the `updateAvatar()` is a callback function to a record subscription. In deepstream, the callback function is fired everytime the data in the subscribed record/path changes. This makes it very easy for us to continually update the actual avatar as well, according to the changing data.
 
 ```javascript
 //update Avatar according to changing attributes
@@ -386,9 +388,7 @@ function updateAvatar(id, userRecord) {
 }
 ```
 
-If an avatar already exists, we simply update it's position and rotation from the continually updating data in the attr object in the user record. If you scroll back up to the `subscribeToAvatarChanges()` function, you will observe that the `updateAvatar()` is a callback function to a record subscription. In deepstream, the callback function is fired everytime the data in the subscribed record/path changes.
-
-Finally, we need to ensure that the avatar is removed from the scene every time a user logs out. This can be done using presence by handling the logout flag in the callback. Here are a few things you need to delete everytime a user logs out:
+Finally, we need to ensure that the avatar is removed from the scene whenever a user logs out. This can be done using presence by handling the logout flag in the callback. Here are a few things you need to do when a user logs out:
 
 
 ```javascript
@@ -400,8 +400,10 @@ function removeAvatar(id){
 }
 ```
 
-We start by removing the complete avatar from the scene.We also make sure to delete the corresponding record as well in order to ensure that we don't waste unnecessary storage space.
+We start by removing the complete avatar from the scene. We also make sure to delete the corresponding record as well in order to ensure that we don't waste unnecessary storage space.
 
-Aaaaaaand, we have now implemented a simple VR app in realtime. Go on and run the demo. If you have been working in a local envrironment, you might need a local server to host your files. I personally use [glitch](glitch.com) for all my VR projects. It automatically hosts all the projects and gives a URL which can be instantly used on multiple devices for the applications like we just built.
+#### That's it!
 
-Did it work? Do you like it? Awesome! You now know the basics of both A-Frame and deepstream. Ideas are already brewing in your mind? Go ahead and build that app you've always wanted to.
+We have now successfully implemented a simple VR app in realtime. Go ahead and test it out. If you have been working in a local envrironment, you might need a local server to host your files. As mentioned above, I personally use [glitch](glitch.com) for all my VR projects. It automatically hosts all the projects and gives a URL which can be instantly used on multiple devices for the applications like we just built.
+
+You now know the basics of both A-Frame and deepstream allowing you to build both VR apps and realtime apps or both together like we just did. Ideas are already brewing in your mind? Go ahead and build that app you've always wanted to! Here's the complete [source code](https://github.com/Srushtika/realtime-multiplayer-webvr-aframe) for this application. Feel free to shout to me on [Twitter](https://twitter.com/Srushtika) if you get stuck or would like to know more about something.
